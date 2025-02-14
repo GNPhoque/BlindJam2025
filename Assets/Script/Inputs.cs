@@ -5,12 +5,19 @@ using UnityEngine;
 
 public class Inputs : MonoBehaviour
 {
+    public Action<KeyCode> OnPlayerKeyPushed;
     public Action PushedUp;
     public Action PushedDown;
     public Action PushedOk;
     public Action PushedCancel;
 
     public static Inputs instance;
+
+    public KeyCode[] humanKeys = new KeyCode[]
+    {
+        KeyCode.Space,
+        KeyCode.A
+    };
 
     private void Awake()
     {
@@ -37,7 +44,7 @@ public class Inputs : MonoBehaviour
         {
 			PushedDown?.Invoke();
 		}
-		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+		if (Input.GetKeyDown(KeyCode.Return))
         {
 			PushedOk?.Invoke();
 		}
@@ -45,6 +52,14 @@ public class Inputs : MonoBehaviour
         {
 			PushedCancel?.Invoke();
 		}
+
+        foreach (var key in humanKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                OnPlayerKeyPushed?.Invoke(key);
+            }
+        }
 	}
 
 }

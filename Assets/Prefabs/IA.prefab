@@ -44,5 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c04dd513ffb934bb4d56eaf9f712a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: 
   precision: 2
   stopTime: 0
+  useSerializedPrecision: 0
+  precisionTargetCalculationRatio: 0.1

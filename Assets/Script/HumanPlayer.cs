@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class HumanPlayer : Player
 {
+	KeyCode key;
+
 	private void Start()
 	{
 		Inputs.instance.PushedOk += SendTime;
@@ -14,8 +16,22 @@ public class HumanPlayer : Player
 		Inputs.instance.PushedOk -= SendTime;
 	}
 
+	public void SetKey(KeyCode newKey)
+	{
+		key = newKey;
+		Inputs.instance.OnPlayerKeyPushed += SendTimeIfCorrectKey;
+	}
+
 	public override void SetTarget(int _target)
 	{
+	}
+
+	void SendTimeIfCorrectKey(KeyCode code)
+	{
+		if(code == key)
+		{
+			SendTime();
+		}
 	}
 
 	protected override void SendTime()

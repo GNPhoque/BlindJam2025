@@ -8,8 +8,9 @@ using UnityEngine;
 public class OpponentAI : Player
 {
 	[SerializeField] float precision;
-
 	[SerializeField] float stopTime;
+	[SerializeField] bool useSerializedPrecision;
+	[SerializeField] float precisionTargetCalculationRatio;
 
 	int target;
 
@@ -22,8 +23,14 @@ public class OpponentAI : Player
 	public override void SetTarget(int _target)
 	{
 		target = _target;
+
 		//TODO : maybe some pondération to avoid perfect time (maybe?)
-		stopTime = Random.Range(target - precision, target);
+		if (!useSerializedPrecision)
+		{
+			precision = target * precisionTargetCalculationRatio;
+		}
+
+		stopTime = Random.Range(target - precision, target + precision / 2f);
 		print($"AI TARGET : {stopTime} ");
 		StartCoroutine(StopCounting(stopTime));
 	}

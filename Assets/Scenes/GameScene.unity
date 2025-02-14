@@ -601,11 +601,12 @@ MonoBehaviour:
   minimumTime: 5
   maximumTime: 8
   delayBeforeHideTimer: 3
+  humanPlayerPrefab: {fileID: 6248666537215029772, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
   players:
-  - {fileID: 2469092943339183440}
   - {fileID: 5611682161031101076}
   - {fileID: 2054496820}
   - {fileID: 1151658213}
+  currentPlayers: []
 --- !u!4 &479075923
 Transform:
   m_ObjectHideFlags: 0
@@ -1395,6 +1396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdf9fc1014b35634b89504372067d828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  humanKeys: 2000000061000000
 --- !u!4 &1567148888
 Transform:
   m_ObjectHideFlags: 0
@@ -1616,78 +1618,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c04dd513ffb934bb4d56eaf9f712a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &2469092943339183439
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2300687384630777323, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300687384630777323, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300687384630777323, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300687384630777323, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300687384630777323, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300687384630777323, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300687384630777323, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300687384630777323, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300687384630777323, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2300687384630777323, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5372805166468979765, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
-      propertyPath: m_Name
-      value: Humain
-      objectReference: {fileID: 0}
-    - target: {fileID: 6248666537215029772, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
-      propertyPath: name
-      value: Jean
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
---- !u!114 &2469092943339183440 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6248666537215029772, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
-  m_PrefabInstance: {fileID: 2469092943339183439}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9c0c13325484c4ea7cd3b8a053a367, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &5611682161031101075
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1766,7 +1696,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 25356819}
   - {fileID: 1224780799}
-  - {fileID: 2469092943339183439}
   - {fileID: 5611682161031101075}
   - {fileID: 2054496819}
   - {fileID: 1151658212}

@@ -17,14 +17,18 @@ public class GameManager : MonoBehaviour
 	[SerializeField] int maximumTime;
 	[SerializeField] float delayBeforeHideTimer;
 
+	[SerializeField] HumanPlayer humanPlayerPrefab;
 	[SerializeField] List<Player> players;
+	[SerializeField] List<Player> currentPlayers;
 
 	int target = 0;
 	Stopwatch timer;
 	Dictionary<Player, float> leaderboard;
+	Dictionary<KeyCode, Player> playerKeys;
 
 	private void Awake()
 	{
+		//Singleton
 		if (instance == null)
 		{
 			instance = this;
@@ -33,6 +37,9 @@ public class GameManager : MonoBehaviour
 		{
 			Destroy(gameObject);
 		}
+
+		//Events
+		Inputs.instance.OnPlayerKeyPushed += CreateHumanPlayer;
 	}
 
 	void Start()
@@ -40,6 +47,11 @@ public class GameManager : MonoBehaviour
 		timeText.text = "00.00";
 		timer = new Stopwatch();
 		leaderboard = new Dictionary<Player, float>();
+		playerKeys = new Dictionary<KeyCode, Player>();
+		foreach (var key in Inputs.instance.humanKeys)
+		{
+			playerKeys.Add(key, null);
+		}
 	}
 
 	void Update()
@@ -48,11 +60,16 @@ public class GameManager : MonoBehaviour
 		timeText.text = time;
 	}
 
+	void OnDestroy()
+	{
+		Inputs.instance.OnPlayerKeyPushed -= CreateHumanPlayer;
+	}
+
 	void ResetLeaderboard()
 	{
 		leaderboard.Clear();
 
-		foreach (var player in players)
+		foreach (var player in currentPlayers)
 		{
 			leaderboard.Add(player, -1);
 		}
@@ -103,7 +120,7 @@ public class GameManager : MonoBehaviour
 			if(leaderboard.ElementAt(i).Value == -1)
 			{
 				scoreText.text += $"{leaderboard.ElementAt(i).Key.name} : DEAD, ";
-				players.Remove(leaderboard.ElementAt(i).Key);
+				currentPlayers.Remove(leaderboard.ElementAt(i).Key);
 				eliminated++;
 			}
 			else
@@ -122,7 +139,7 @@ public class GameManager : MonoBehaviour
 			{
 				if(orderedLeaderboard.ElementAt(i).Value == furthestTime)
 				{
-					players.Remove(orderedLeaderboard.ElementAt(i).Key);
+					currentPlayers.Remove(orderedLeaderboard.ElementAt(i).Key);
 				}
 				else
 				{
@@ -134,12 +151,12 @@ public class GameManager : MonoBehaviour
 		//Todo : je sais plus comment ca marche mais la il vire que la virgule
 		scoreText.text = scoreText.text.Remove(scoreText.text.Length - 2, 2);
 
-		if(players.Count == 1)
+		if(currentPlayers.Count == 1)
 		{
 			//WINNER
-			finalText.text = $"{players.First().name} wins the game!";
+			finalText.text = $"{currentPlayers.First().name} wins the game!";
 		}
-		else if(players.Count == 0)
+		else if(currentPlayers.Count == 0)
 		{
 			//ALL LOSERS
 			finalText.text = $"Everybody has lost the game!";
@@ -165,10 +182,20 @@ public class GameManager : MonoBehaviour
 	{
 		//TODO : add players to player list if not enough present
 
+		//New game
+		if(currentPlayers.Count <= 1)
+		{
+			currentPlayers.Clear();
+			foreach (var player in players)
+			{
+				currentPlayers.Add(player);
+			}
+		}
+
 		ResetLeaderboard();
 
 		target = Random.Range(minimumTime, maximumTime);
-		foreach (var player in players)
+		foreach (var player in currentPlayers)
 		{
 			player.SetTarget(target);
 		}
@@ -179,6 +206,19 @@ public class GameManager : MonoBehaviour
 		StartCoroutine(EndRound(target));
 
 		timer.Restart();
+	}
+	#endregion
+
+	#region -----ASSIGN PLAYERS-----
+	public void CreateHumanPlayer(KeyCode key)
+	{
+		if (playerKeys.ContainsKey(key) && playerKeys[key] == null)
+		{
+			HumanPlayer player = Instantiate(humanPlayerPrefab);
+			player.SetKey(key);
+			players.Add(player);
+			playerKeys[key] = player;
+		}
 	}
 	#endregion
 }
