@@ -9,14 +9,18 @@ public class GameManager : MonoBehaviour
 {
 	public static GameManager instance;
 
+	[SerializeField] List<string> playerNames;
+
 	[SerializeField] TextMeshProUGUI timeText;
 	[SerializeField] TextMeshProUGUI targetText;
 	[SerializeField] TextMeshProUGUI scoreText;
 	[SerializeField] TextMeshProUGUI finalText;
+	[SerializeField] int minimumPlayersToStartGame;
 	[SerializeField] int minimumTime;
 	[SerializeField] int maximumTime;
 	[SerializeField] float delayBeforeHideTimer;
 
+	[SerializeField] OpponentAI aiPlayerPrefab;
 	[SerializeField] HumanPlayer humanPlayerPrefab;
 	[SerializeField] List<Player> players;
 	[SerializeField] List<Player> currentPlayers;
@@ -186,9 +190,42 @@ public class GameManager : MonoBehaviour
 		if(currentPlayers.Count <= 1)
 		{
 			currentPlayers.Clear();
+
+			//Only add human players first
 			foreach (var player in players)
 			{
+				if(player is OpponentAI) 
+				{ 
+					continue; 
+				}
 				currentPlayers.Add(player);
+			}
+
+			//If not enough humans add AIs
+			if(currentPlayers.Count < minimumPlayersToStartGame)
+			{
+				//Starting with already instantiated AIs
+				foreach (var player in players)
+				{
+					if(player is HumanPlayer)
+					{
+						continue;
+					}
+					currentPlayers.Add(player);
+					if(currentPlayers.Count >= minimumPlayersToStartGame)
+					{
+						break;
+					}
+				}
+
+				//If still not enough, instantiate more
+				while(currentPlayers.Count < minimumPlayersToStartGame)
+				{
+					OpponentAI ai = Instantiate(aiPlayerPrefab);
+					ai.SetName(playerNames.ElementAt(Random.Range(0, playerNames.Count - 1)));
+					players.Add(ai);
+					currentPlayers.Add(ai);
+				}
 			}
 		}
 
@@ -215,6 +252,7 @@ public class GameManager : MonoBehaviour
 		if (playerKeys.ContainsKey(key) && playerKeys[key] == null)
 		{
 			HumanPlayer player = Instantiate(humanPlayerPrefab);
+			player.SetName(playerNames.ElementAt(Random.Range(0, playerNames.Count - 1)));
 			player.SetKey(key);
 			players.Add(player);
 			playerKeys[key] = player;
