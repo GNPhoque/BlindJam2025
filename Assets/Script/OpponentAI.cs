@@ -23,7 +23,7 @@ public class OpponentAI : Player
 	{
 		target = _target;
 		//TODO : maybe some pondération to avoid perfect time (maybe?)
-		stopTime = Random.Range(target - precision, target + precision);
+		stopTime = Random.Range(target - precision, target);
 		print($"AI TARGET : {stopTime} ");
 		StartCoroutine(StopCounting(stopTime));
 	}
