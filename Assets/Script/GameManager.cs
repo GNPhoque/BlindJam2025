@@ -41,9 +41,6 @@ public class GameManager : MonoBehaviour
 		{
 			Destroy(gameObject);
 		}
-
-		//Events
-		Inputs.instance.OnPlayerKeyPushed += CreateHumanPlayer;
 	}
 
 	void Start()
@@ -52,10 +49,6 @@ public class GameManager : MonoBehaviour
 		timer = new Stopwatch();
 		leaderboard = new Dictionary<Player, float>();
 		playerKeys = new Dictionary<KeyCode, Player>();
-		foreach (var key in Inputs.instance.humanKeys)
-		{
-			playerKeys.Add(key, null);
-		}
 	}
 
 	void Update()
@@ -64,9 +57,13 @@ public class GameManager : MonoBehaviour
 		timeText.text = time;
 	}
 
-	void OnDestroy()
+
+	public void AddHumanPlayer(HumanPlayer player)
 	{
-		Inputs.instance.OnPlayerKeyPushed -= CreateHumanPlayer;
+		if (!players.Contains(player))
+		{
+			players.Add(player);
+		}
 	}
 
 	void ResetLeaderboard()
@@ -253,10 +250,14 @@ public class GameManager : MonoBehaviour
 		{
 			HumanPlayer player = Instantiate(humanPlayerPrefab);
 			player.SetName(playerNames.ElementAt(Random.Range(0, playerNames.Count - 1)));
-			player.SetKey(key);
 			players.Add(player);
 			playerKeys[key] = player;
 		}
+	}
+
+	public string GetName()
+	{
+		return playerNames.ElementAt(Random.Range(0, playerNames.Count - 1));
 	}
 	#endregion
 }

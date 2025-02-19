@@ -1,41 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class HumanPlayer : Player
 {
-	KeyCode key;
-
 	private void Start()
 	{
-		Inputs.instance.PushedOk += SendTime;
+		SetName(GameManager.instance.GetName());
+		GameManager.instance.AddHumanPlayer(this);
 	}
 
-	void OnDestroy()
+	public void OnSubmit(InputValue state)
 	{
-		Inputs.instance.PushedOk -= SendTime;
-	}
-
-	public void SetKey(KeyCode newKey)
-	{
-		key = newKey;
-		Inputs.instance.OnPlayerKeyPushed += SendTimeIfCorrectKey;
-	}
-
-	public override void SetTarget(int _target)
-	{
-	}
-
-	void SendTimeIfCorrectKey(KeyCode code)
-	{
-		if(code == key)
-		{
-			SendTime();
-		}
+		SendTime();
 	}
 
 	protected override void SendTime()
 	{
 		GameManager.instance.SetPlayerTime(this);
+	}
+
+	public override void SetTarget(int _target)
+	{
 	}
 }

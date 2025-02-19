@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2300687384630777323}
   - component: {fileID: 6248666537215029772}
+  - component: {fileID: 8362876058886602694}
   m_Layer: 0
   m_Name: Humain
   m_TagString: Untagged
@@ -44,3 +45,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9c0c13325484c4ea7cd3b8a053a367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: 
+--- !u!114 &8362876058886602694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5372805166468979765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 803fd1ea9cf5b66429bc1ef7ac11099a, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a2c6991c-d999-4d02-9426-628d94940267
+    m_ActionName: PlayerActions/Submit[/Keyboard/space,/XInputControllerWindows1/buttonSouth,/XInputControllerWindows/buttonSouth,/SwitchProControllerHID/buttonSouth]
+  m_NeverAutoSwitchControlSchemes: 1
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: PlayerActions
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
