@@ -6,6 +6,7 @@ public class HumanPlayer : Player
 	{
 		SetName(GameManager.instance.GetName());
 		GameManager.instance.AddHumanPlayer(this);
+		AudioManager.instance.PlayRandomSfx(joinSounds);
 	}
 
 	public void OnSubmit(InputValue state)

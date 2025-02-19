@@ -5,7 +5,12 @@ using UnityEngine;
 
 public abstract class Player : MonoBehaviour
 {
-	public string name;
+	public AudioClip[] joinSounds;
+	public AudioClip[] buttonSounds;
+	public AudioClip[] defeatSounds;
+	public AudioClip[] victorySounds;
+
+	public new string name;
 	public void SetName(string newName)
 	{
 		name = newName;

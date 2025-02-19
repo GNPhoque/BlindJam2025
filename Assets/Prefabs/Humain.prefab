@@ -45,6 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9c0c13325484c4ea7cd3b8a053a367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  joinSounds:
+  - {fileID: 8300000, guid: 69c2d5adf37aa55478c75e9b12be75e9, type: 3}
+  - {fileID: 8300000, guid: 5eb09fca916934b43adc58a33b7a3b30, type: 3}
+  - {fileID: 8300000, guid: 6e98150cd820add42b6d6b091bf73e2e, type: 3}
+  - {fileID: 8300000, guid: 1368bbb3dbafdde47ab58e880ea75e34, type: 3}
+  buttonSounds: []
+  defeatSounds: []
+  victorySounds: []
   name: 
 --- !u!114 &8362876058886602694
 MonoBehaviour:
