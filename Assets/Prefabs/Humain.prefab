@@ -50,7 +50,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5eb09fca916934b43adc58a33b7a3b30, type: 3}
   - {fileID: 8300000, guid: 6e98150cd820add42b6d6b091bf73e2e, type: 3}
   - {fileID: 8300000, guid: 1368bbb3dbafdde47ab58e880ea75e34, type: 3}
-  buttonSounds: []
+  buttonSounds:
+  - {fileID: 8300000, guid: 69c2d5adf37aa55478c75e9b12be75e9, type: 3}
+  - {fileID: 8300000, guid: 5eb09fca916934b43adc58a33b7a3b30, type: 3}
+  - {fileID: 8300000, guid: 6e98150cd820add42b6d6b091bf73e2e, type: 3}
+  - {fileID: 8300000, guid: 1368bbb3dbafdde47ab58e880ea75e34, type: 3}
   defeatSounds: []
   victorySounds: []
   name: 

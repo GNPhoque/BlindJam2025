@@ -9,8 +9,6 @@ public class GameManager : MonoBehaviour
 {
 	public static GameManager instance;
 
-	[SerializeField] List<string> playerNames;
-
 	[SerializeField] TextMeshProUGUI timeText;
 	[SerializeField] TextMeshProUGUI targetText;
 	[SerializeField] TextMeshProUGUI scoreText;
@@ -24,11 +22,13 @@ public class GameManager : MonoBehaviour
 	[SerializeField] HumanPlayer humanPlayerPrefab;
 	[SerializeField] List<Player> players;
 	[SerializeField] List<Player> currentPlayers;
+	[SerializeField] List<SOPlayerAnimal> playerAnimals;
 
 	int target = 0;
 	Stopwatch timer;
 	Dictionary<Player, float> leaderboard;
 	Dictionary<KeyCode, Player> playerKeys;
+	List<SOPlayerAnimal> assignedAnimals;
 
 	private void Awake()
 	{
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
 		timeText.text = "00.00";
 		timer = new Stopwatch();
 		leaderboard = new Dictionary<Player, float>();
-		playerKeys = new Dictionary<KeyCode, Player>();
+		assignedAnimals = new List<SOPlayerAnimal>();
 	}
 
 	void Update()
@@ -57,6 +57,24 @@ public class GameManager : MonoBehaviour
 		timeText.text = time;
 	}
 
+	public SOPlayerAnimal GetAnimal()
+	{
+		//If all assigned, any random
+		if(assignedAnimals.Count >= playerAnimals.Count)
+		{
+			return playerAnimals[Random.Range(0, playerAnimals.Count)];
+		}
+
+		//Else pick random until a new one is picked
+		SOPlayerAnimal animal = playerAnimals[Random.Range(0, playerAnimals.Count)];
+		while (assignedAnimals.Contains(animal))
+		{
+			animal = playerAnimals[Random.Range(0, playerAnimals.Count)];
+		}
+
+		assignedAnimals.Add(animal);
+		return animal;
+	}
 
 	public void AddHumanPlayer(HumanPlayer player)
 	{
@@ -95,7 +113,21 @@ public class GameManager : MonoBehaviour
 
 	public void SetPlayerTime(Player player, float time = -1)
 	{
+		//Lobby
+		if (!timer.IsRunning)
+		{
+			AudioManager.instance.PlayRandomSfx(player.animal.buttonSounds);
+			return;
+		}
+
+		//Only players remaining in game can send time
 		if (!leaderboard.ContainsKey(player))
+		{
+			return;
+		}
+
+		//Player has already submitted time
+		if (leaderboard[player] != -1f)
 		{
 			return;
 		}
@@ -106,6 +138,7 @@ public class GameManager : MonoBehaviour
 		}
 
 		leaderboard[player] = time;
+		AudioManager.instance.PlayRandomSfx(player.animal.buttonSounds);
 	}
 
 	public void StopTimer()
@@ -117,12 +150,14 @@ public class GameManager : MonoBehaviour
 
 		for(int i = 0; i < leaderboard.Count; i++)
 		{
+			Player player = leaderboard.ElementAt(i).Key;
 			scoreText.text += "\n";
 			if(leaderboard.ElementAt(i).Value == -1)
 			{
-				scoreText.text += $"{leaderboard.ElementAt(i).Key.name} : DEAD, ";
-				currentPlayers.Remove(leaderboard.ElementAt(i).Key);
+				scoreText.text += $"{player.name} : DEAD, ";
+				currentPlayers.Remove(player);
 				eliminated++;
+				AudioManager.instance.PlayRandomSfx(player.animal.defeatSounds);
 			}
 			else
 			{
@@ -141,6 +176,7 @@ public class GameManager : MonoBehaviour
 				if(orderedLeaderboard.ElementAt(i).Value == furthestTime)
 				{
 					currentPlayers.Remove(orderedLeaderboard.ElementAt(i).Key);
+					AudioManager.instance.PlayRandomSfx(orderedLeaderboard.ElementAt(i).Key.animal.defeatSounds);
 				}
 				else
 				{
@@ -149,18 +185,22 @@ public class GameManager : MonoBehaviour
 			}
 		}
 
-		//Todo : je sais plus comment ca marche mais la il vire que la virgule
 		scoreText.text = scoreText.text.Remove(scoreText.text.Length - 2, 2);
 
 		if(currentPlayers.Count == 1)
 		{
 			//WINNER
 			finalText.text = $"{currentPlayers.First().name} wins the game!";
+			AudioManager.instance.PlayRandomSfx(currentPlayers.First().animal.victorySounds);
 		}
 		else if(currentPlayers.Count == 0)
 		{
 			//ALL LOSERS
 			finalText.text = $"Everybody has lost the game!";
+			foreach (Player player in players)
+			{
+				AudioManager.instance.PlayRandomSfx(player.animal.defeatSounds);
+			}
 		}
 	}
 
@@ -219,7 +259,6 @@ public class GameManager : MonoBehaviour
 				while(currentPlayers.Count < minimumPlayersToStartGame)
 				{
 					OpponentAI ai = Instantiate(aiPlayerPrefab);
-					ai.SetName(playerNames.ElementAt(Random.Range(0, playerNames.Count - 1)));
 					players.Add(ai);
 					currentPlayers.Add(ai);
 				}
@@ -240,24 +279,6 @@ public class GameManager : MonoBehaviour
 		StartCoroutine(EndRound(target));
 
 		timer.Restart();
-	}
-	#endregion
-
-	#region -----ASSIGN PLAYERS-----
-	public void CreateHumanPlayer(KeyCode key)
-	{
-		if (playerKeys.ContainsKey(key) && playerKeys[key] == null)
-		{
-			HumanPlayer player = Instantiate(humanPlayerPrefab);
-			player.SetName(playerNames.ElementAt(Random.Range(0, playerNames.Count - 1)));
-			players.Add(player);
-			playerKeys[key] = player;
-		}
-	}
-
-	public string GetName()
-	{
-		return playerNames.ElementAt(Random.Range(0, playerNames.Count - 1));
 	}
 	#endregion
 }

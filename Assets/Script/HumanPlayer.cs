@@ -1,17 +1,23 @@
+using System.Collections;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class HumanPlayer : Player
 {
-	private void Start()
+	private PlayerInput playerInput;
+
+	protected override void Start()
 	{
-		SetName(GameManager.instance.GetName());
+		base.Start();
 		GameManager.instance.AddHumanPlayer(this);
-		AudioManager.instance.PlayRandomSfx(joinSounds);
+		playerInput = GetComponent<PlayerInput>();
 	}
 
 	public void OnSubmit(InputValue state)
 	{
 		SendTime();
+		StartCoroutine(Rumble(1f, 1f));
 	}
 
 	protected override void SendTime()
@@ -21,5 +27,20 @@ public class HumanPlayer : Player
 
 	public override void SetTarget(int _target)
 	{
+	}
+
+	IEnumerator Rumble(float duration, float power)
+	{
+		Gamepad g = Gamepad.all.FirstOrDefault(x => playerInput.devices.Any(d => d.deviceId == x.deviceId));
+
+		if (g == null)
+		{
+			yield break;
+		}
+
+		g.SetMotorSpeeds(power, power);
+
+		yield return new WaitForSeconds(duration);
+		g.SetMotorSpeeds(0, 0);
 	}
 }

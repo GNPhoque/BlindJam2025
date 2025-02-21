@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8e81f5addda03b48b415302e86ce943, type: 3}
+  m_Name: ChickenPlayerAnimal
+  m_EditorClassIdentifier: 
+  joinSounds:
+  - {fileID: 8300000, guid: 4cf92a4aaf6672e46bcad225c23c03f8, type: 3}
+  - {fileID: 8300000, guid: 2482ddc14e8cca840a65de16e7f91d88, type: 3}
+  - {fileID: 8300000, guid: 1b1a4fa19b456ee4782bfa8ba9a73fbc, type: 3}
+  - {fileID: 8300000, guid: 55e4205d213e0da4ea0fddeb63df739e, type: 3}
+  - {fileID: 8300000, guid: 7a5c1577f4ec3034e86f408a3f50fff2, type: 3}
+  buttonSounds:
+  - {fileID: 8300000, guid: 4cf92a4aaf6672e46bcad225c23c03f8, type: 3}
+  - {fileID: 8300000, guid: 2482ddc14e8cca840a65de16e7f91d88, type: 3}
+  - {fileID: 8300000, guid: 1b1a4fa19b456ee4782bfa8ba9a73fbc, type: 3}
+  - {fileID: 8300000, guid: 55e4205d213e0da4ea0fddeb63df739e, type: 3}
+  - {fileID: 8300000, guid: 7a5c1577f4ec3034e86f408a3f50fff2, type: 3}
+  - {fileID: 8300000, guid: 6a56aee3ec54cc64b94bc589b8825438, type: 3}
+  - {fileID: 8300000, guid: 462f32ae632c8e74a8d9e671055e6617, type: 3}
+  defeatSounds:
+  - {fileID: 8300000, guid: 434c7804e19417243a5b3d37edf8f60a, type: 3}
+  - {fileID: 8300000, guid: b1ee59dbcaa074e428d8675ce402e645, type: 3}
+  - {fileID: 8300000, guid: 47fcab50d18bcca40b1576f18a7a33fd, type: 3}
+  - {fileID: 8300000, guid: 4a7f7252628761c48bc14deebf06a654, type: 3}
+  victorySounds:
+  - {fileID: 8300000, guid: e5f6c5862610bbc44b23c6d6ca8f10c6, type: 3}
+  - {fileID: 8300000, guid: 5fc41e746f5e44f498e5e95bb0e0372b, type: 3}
+  - {fileID: 8300000, guid: 2aa29624150308c4f947564386d85ad7, type: 3}
+  names:
+  - LaPoule
+  - Nugget
+  - KFC

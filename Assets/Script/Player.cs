@@ -5,15 +5,19 @@ using UnityEngine;
 
 public abstract class Player : MonoBehaviour
 {
-	public AudioClip[] joinSounds;
-	public AudioClip[] buttonSounds;
-	public AudioClip[] defeatSounds;
-	public AudioClip[] victorySounds;
-
 	public new string name;
-	public void SetName(string newName)
+	public SOPlayerAnimal animal;
+
+	protected virtual void Start()
 	{
-		name = newName;
+		animal = GameManager.instance.GetAnimal();
+		SetName();
+		AudioManager.instance.PlayRandomSfx(animal.joinSounds);
+	}
+
+	void SetName()
+	{
+		name = animal.GetName();
 	}
 	public abstract void SetTarget(int _target);
 	protected abstract void SendTime();
