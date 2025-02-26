@@ -238,6 +238,8 @@ public class GameManager : MonoBehaviour
 			return;
 		}
 
+		AudioManager.instance.PlayTicTac();
+
 		//New game
 		if(currentPlayers.Count <= 1)
 		{

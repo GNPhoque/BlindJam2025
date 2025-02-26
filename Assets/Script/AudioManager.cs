@@ -7,6 +7,7 @@ public class AudioManager : MonoBehaviour
 {
 	public static AudioManager instance;
 
+	[SerializeField] AudioClip tictac;
 	private AudioSource audioSource;
 
 	private void Awake()
@@ -45,5 +46,10 @@ public class AudioManager : MonoBehaviour
 		{
 			source.PlayOneShot(clip);
 		}
+	}
+
+	public void PlayTicTac()
+	{
+		audioSource.PlayOneShot(tictac);
 	}
 }
