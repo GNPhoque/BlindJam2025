@@ -21,4 +21,5 @@ public abstract class Player : MonoBehaviour
 	}
 	public abstract void SetTarget(int _target);
 	protected abstract void SendTime();
+	public abstract IEnumerator Rumble(float duration, AnimationCurve curve = null);
 }

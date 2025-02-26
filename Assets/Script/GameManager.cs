@@ -17,6 +17,10 @@ public class GameManager : MonoBehaviour
 	[SerializeField] int minimumTime;
 	[SerializeField] int maximumTime;
 	[SerializeField] float delayBeforeHideTimer;
+	[SerializeField] float playerJoinRumbleDuration;
+	[SerializeField] float playerLoseRumbleDuration;
+	[SerializeField] float playerWinRumbleDuration;
+	[SerializeField] AnimationCurve playerWinRumbleCurve;
 
 	[SerializeField] OpponentAI aiPlayerPrefab;
 	[SerializeField] HumanPlayer humanPlayerPrefab;
@@ -117,6 +121,7 @@ public class GameManager : MonoBehaviour
 		if (!timer.IsRunning)
 		{
 			AudioManager.instance.PlayRandomSfx(player.animal.buttonSounds);
+			StartCoroutine(player.Rumble(playerJoinRumbleDuration));
 			return;
 		}
 
@@ -132,6 +137,7 @@ public class GameManager : MonoBehaviour
 			return;
 		}
 
+		//For AI
 		if(time == -1)
 		{
 			time = GetCurrentTime();
@@ -139,6 +145,7 @@ public class GameManager : MonoBehaviour
 
 		leaderboard[player] = time;
 		AudioManager.instance.PlayRandomSfx(player.animal.buttonSounds);
+		StartCoroutine(player.Rumble(playerJoinRumbleDuration));
 	}
 
 	public void StopTimer()
@@ -158,6 +165,7 @@ public class GameManager : MonoBehaviour
 				currentPlayers.Remove(player);
 				eliminated++;
 				AudioManager.instance.PlayRandomSfx(player.animal.defeatSounds);
+				StartCoroutine(player.Rumble(playerLoseRumbleDuration));
 			}
 			else
 			{
@@ -177,6 +185,7 @@ public class GameManager : MonoBehaviour
 				{
 					currentPlayers.Remove(orderedLeaderboard.ElementAt(i).Key);
 					AudioManager.instance.PlayRandomSfx(orderedLeaderboard.ElementAt(i).Key.animal.defeatSounds);
+					StartCoroutine(orderedLeaderboard.ElementAt(i).Key.Rumble(playerLoseRumbleDuration));
 				}
 				else
 				{
@@ -192,6 +201,7 @@ public class GameManager : MonoBehaviour
 			//WINNER
 			finalText.text = $"{currentPlayers.First().name} wins the game!";
 			AudioManager.instance.PlayRandomSfx(currentPlayers.First().animal.victorySounds);
+			StartCoroutine(currentPlayers.First().Rumble(playerWinRumbleDuration, playerWinRumbleCurve));
 		}
 		else if(currentPlayers.Count == 0)
 		{

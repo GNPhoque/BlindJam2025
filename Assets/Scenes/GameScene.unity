@@ -612,6 +612,60 @@ MonoBehaviour:
   minimumTime: 5
   maximumTime: 8
   delayBeforeHideTimer: 3
+  playerJoinRumbleDuration: 0.2
+  playerLoseRumbleDuration: 1
+  playerWinRumbleDuration: 2.4
+  playerWinRumbleCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.6
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.2
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.8
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 2.4
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   aiPlayerPrefab: {fileID: 378208046349222547, guid: a9dbb992fabc4b64887b1e72129364a0, type: 3}
   humanPlayerPrefab: {fileID: 6248666537215029772, guid: edad13daa03ee8c4a8c1842dde41fd2d, type: 3}
   players: []
