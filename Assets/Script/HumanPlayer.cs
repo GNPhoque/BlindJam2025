@@ -12,14 +12,21 @@ public class HumanPlayer : Player
 	protected override void Start()
 	{
 		base.Start();
-		GameManager.instance.AddHumanPlayer(this);
-		playerInput = GetComponent<PlayerInput>();
+
 		currentRumbles = new List<object>();
+		playerInput = GetComponent<PlayerInput>();
+
+		GameManager.instance.AddHumanPlayer(this);
 	}
 
 	public void OnSubmit(InputValue state)
 	{
 		SendTime();
+	}
+
+	public void OnStart(InputValue state)
+	{
+		GameManager.instance.StartTimer();
 	}
 
 	protected override void SendTime()

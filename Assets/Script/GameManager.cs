@@ -85,6 +85,7 @@ public class GameManager : MonoBehaviour
 		if (!players.Contains(player))
 		{
 			players.Add(player);
+			StartCoroutine(player.Rumble(playerJoinRumbleDuration));
 		}
 	}
 
@@ -120,7 +121,7 @@ public class GameManager : MonoBehaviour
 		//Lobby
 		if (!timer.IsRunning)
 		{
-			AudioManager.instance.PlayRandomSfx(player.animal.buttonSounds);
+			AudioManager.instance.PlayRandomSfx(player.animal.buttonSounds, player.audioSource);
 			StartCoroutine(player.Rumble(playerJoinRumbleDuration));
 			return;
 		}
@@ -144,7 +145,7 @@ public class GameManager : MonoBehaviour
 		}
 
 		leaderboard[player] = time;
-		AudioManager.instance.PlayRandomSfx(player.animal.buttonSounds);
+		AudioManager.instance.PlayRandomSfx(player.animal.buttonSounds, player.audioSource);
 		StartCoroutine(player.Rumble(playerJoinRumbleDuration));
 	}
 
@@ -164,7 +165,7 @@ public class GameManager : MonoBehaviour
 				scoreText.text += $"{player.name} : DEAD, ";
 				currentPlayers.Remove(player);
 				eliminated++;
-				AudioManager.instance.PlayRandomSfx(player.animal.defeatSounds);
+				AudioManager.instance.PlayRandomSfx(player.animal.defeatSounds, player.audioSource);
 				StartCoroutine(player.Rumble(playerLoseRumbleDuration));
 			}
 			else
@@ -184,7 +185,7 @@ public class GameManager : MonoBehaviour
 				if(orderedLeaderboard.ElementAt(i).Value == furthestTime)
 				{
 					currentPlayers.Remove(orderedLeaderboard.ElementAt(i).Key);
-					AudioManager.instance.PlayRandomSfx(orderedLeaderboard.ElementAt(i).Key.animal.defeatSounds);
+					AudioManager.instance.PlayRandomSfx(orderedLeaderboard.ElementAt(i).Key.animal.defeatSounds, orderedLeaderboard.ElementAt(i).Key.audioSource);
 					StartCoroutine(orderedLeaderboard.ElementAt(i).Key.Rumble(playerLoseRumbleDuration));
 				}
 				else
@@ -200,7 +201,7 @@ public class GameManager : MonoBehaviour
 		{
 			//WINNER
 			finalText.text = $"{currentPlayers.First().name} wins the game!";
-			AudioManager.instance.PlayRandomSfx(currentPlayers.First().animal.victorySounds);
+			AudioManager.instance.PlayRandomSfx(currentPlayers.First().animal.victorySounds, currentPlayers.First().audioSource);
 			StartCoroutine(currentPlayers.First().Rumble(playerWinRumbleDuration, playerWinRumbleCurve));
 		}
 		else if(currentPlayers.Count == 0)
@@ -209,7 +210,7 @@ public class GameManager : MonoBehaviour
 			finalText.text = $"Everybody has lost the game!";
 			foreach (Player player in players)
 			{
-				AudioManager.instance.PlayRandomSfx(player.animal.defeatSounds);
+				AudioManager.instance.PlayRandomSfx(player.animal.defeatSounds, player.audioSource);
 			}
 		}
 	}
@@ -231,7 +232,11 @@ public class GameManager : MonoBehaviour
 	#region -----BUTTONS-----
 	public void StartTimer()
 	{
-		//TODO : add players to player list if not enough present
+		//Game already going
+		if (timer.IsRunning)
+		{
+			return;
+		}
 
 		//New game
 		if(currentPlayers.Count <= 1)

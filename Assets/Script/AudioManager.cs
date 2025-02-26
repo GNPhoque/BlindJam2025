@@ -23,7 +23,7 @@ public class AudioManager : MonoBehaviour
 		}
 	}
 
-	public void PlayRandomSfx(AudioClip[] clips)
+	public void PlayRandomSfx(AudioClip[] clips, AudioSource source = null)
 	{
 		if(clips.Length == 0)
 		{
@@ -31,11 +31,19 @@ public class AudioManager : MonoBehaviour
 			return;
 		}
 
-		PlaySfx(clips[Random.Range(0, clips.Length)]);
+		PlaySfx(clips[Random.Range(0, clips.Length)], source);
 	}
 
-	public void PlaySfx(AudioClip clip)
+	public void PlaySfx(AudioClip clip, AudioSource source = null)
 	{
-		audioSource.PlayOneShot(clip);
+		if(source == null)
+		{
+			audioSource.PlayOneShot(clip);
+		}
+
+		else
+		{
+			source.PlayOneShot(clip);
+		}
 	}
 }
