@@ -37,10 +37,10 @@ public class OpponentAI : Player
 
 	protected override void SendTime()
 	{
-		GameManager.instance.SetPlayerTime(this, stopTime);
+		GameManager.instance.SetPlayerTime(this);
 	}
 
-	public override IEnumerator Rumble(float duration, AnimationCurve curve = null)
+	public override IEnumerator Rumble(float duration, AnimationCurve curve = null, bool applyOffset = false)
 	{
 		//No controller to rumble for AI players
 		yield break;

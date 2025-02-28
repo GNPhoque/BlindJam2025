@@ -38,7 +38,7 @@ public class HumanPlayer : Player
 	{
 	}
 
-	public override IEnumerator Rumble(float duration, AnimationCurve curve = null)
+	public override IEnumerator Rumble(float duration, AnimationCurve curve = null, bool applyOffset = false)
 	{
 		currentRumbles.Add(new object());
 		Gamepad g = Gamepad.all.FirstOrDefault(x => playerInput.devices.Any(d => d.deviceId == x.deviceId));
@@ -46,6 +46,11 @@ public class HumanPlayer : Player
 		if (g == null)
 		{
 			yield break;
+		}
+
+		if (applyOffset)
+		{
+			yield return new WaitForSeconds(.05f);
 		}
 
 		float power = 1f;

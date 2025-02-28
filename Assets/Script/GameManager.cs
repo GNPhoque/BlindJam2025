@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class GameManager : MonoBehaviour
 	[SerializeField] float playerLoseRumbleDuration;
 	[SerializeField] float playerWinRumbleDuration;
 	[SerializeField] AnimationCurve playerWinRumbleCurve;
+	[SerializeField] float ticTacRumbleDuration;
+	[SerializeField] AnimationCurve ticTacRumbleCurve;
 
 	[SerializeField] OpponentAI aiPlayerPrefab;
 	[SerializeField] HumanPlayer humanPlayerPrefab;
@@ -53,6 +56,8 @@ public class GameManager : MonoBehaviour
 		timer = new Stopwatch();
 		leaderboard = new Dictionary<Player, float>();
 		assignedAnimals = new List<SOPlayerAnimal>();
+
+		AudioManager.instance.PlayJoinNextRound();
 	}
 
 	void Update()
@@ -89,6 +94,101 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	public void StartTimer()
+	{
+		//Game already going
+		if (timer.IsRunning)
+		{
+			return;
+		}
+
+		//New game
+		if (currentPlayers.Count <= 1)
+		{
+			currentPlayers.Clear();
+
+			//Only add human players first
+			foreach (var player in players)
+			{
+				if (player is OpponentAI)
+				{
+					continue;
+				}
+				currentPlayers.Add(player);
+			}
+
+			//If not enough humans add AIs
+			if (currentPlayers.Count < minimumPlayersToStartGame)
+			{
+				//Starting with already instantiated AIs
+				foreach (var player in players)
+				{
+					if (player is HumanPlayer)
+					{
+						continue;
+					}
+					currentPlayers.Add(player);
+					if (currentPlayers.Count >= minimumPlayersToStartGame)
+					{
+						break;
+					}
+				}
+
+				//If still not enough, instantiate more
+				while (currentPlayers.Count < minimumPlayersToStartGame)
+				{
+					OpponentAI ai = Instantiate(aiPlayerPrefab);
+					players.Add(ai);
+					currentPlayers.Add(ai);
+				}
+			}
+		}
+
+		ResetLeaderboard();
+
+		int[] targets = new int[] { 10, 15, 20 };
+		target = targets[Random.Range(0, targets.Count())];
+		foreach (var player in currentPlayers)
+		{
+			player.SetTarget(target);
+		}
+
+		targetText.text = target.ToString();
+
+		switch (target)
+		{
+			case 10:
+				AudioManager.instance.Play10Seconds();
+				break;
+			case 15:
+				AudioManager.instance.Play15Seconds();
+				break;
+			case 20:
+				AudioManager.instance.Play20Seconds();
+				break;
+			default:
+				break;
+		}
+
+		AudioManager.instance.OnClipFinishedPlaying += OnClipEndTarget;
+	}
+
+	void OnClipEndTarget()
+	{
+		AudioManager.instance.OnClipFinishedPlaying -= OnClipEndTarget;
+
+		StartCoroutine(HideCurrentTimeAfterDelay(delayBeforeHideTimer));
+		StartCoroutine(EndRound(target));
+
+		timer.Restart();
+
+		AudioManager.instance.PlayTicTac();
+		foreach (var player in currentPlayers)
+		{
+			StartCoroutine(player.Rumble(ticTacRumbleDuration, ticTacRumbleCurve, true));
+		}
+	}
+
 	void ResetLeaderboard()
 	{
 		leaderboard.Clear();
@@ -116,7 +216,7 @@ public class GameManager : MonoBehaviour
 		return (int)timer.Elapsed.TotalSeconds + timer.Elapsed.Milliseconds / 1000f;
 	}
 
-	public void SetPlayerTime(Player player, float time = -1)
+	public void SetPlayerTime(Player player)
 	{
 		//Lobby
 		if (!timer.IsRunning)
@@ -138,11 +238,7 @@ public class GameManager : MonoBehaviour
 			return;
 		}
 
-		//For AI
-		if(time == -1)
-		{
-			time = GetCurrentTime();
-		}
+		float time = GetCurrentTime();
 
 		leaderboard[player] = time;
 		AudioManager.instance.PlayRandomSfx(player.animal.buttonSounds, player.audioSource);
@@ -203,6 +299,9 @@ public class GameManager : MonoBehaviour
 			finalText.text = $"{currentPlayers.First().name} wins the game!";
 			AudioManager.instance.PlayRandomSfx(currentPlayers.First().animal.victorySounds, currentPlayers.First().audioSource);
 			StartCoroutine(currentPlayers.First().Rumble(playerWinRumbleDuration, playerWinRumbleCurve));
+
+			AudioManager.instance.PlayWinner();
+			AudioManager.instance.OnClipFinishedPlaying += OnClipEndGameOver;
 		}
 		else if(currentPlayers.Count == 0)
 		{
@@ -212,7 +311,30 @@ public class GameManager : MonoBehaviour
 			{
 				AudioManager.instance.PlayRandomSfx(player.animal.defeatSounds, player.audioSource);
 			}
+
+			AudioManager.instance.PlayNobodyWins();
+			AudioManager.instance.OnClipFinishedPlaying += OnClipEndGameOver;
 		}
+		else
+		{
+			//More players remaining => next round
+
+			AudioManager.instance.PlayNextRound();
+			AudioManager.instance.OnClipFinishedPlaying += OnClipEndNextRound;
+		}
+	}
+
+	void OnClipEndNextRound()
+	{
+		AudioManager.instance.OnClipFinishedPlaying -= OnClipEndNextRound;
+
+	}
+
+	void OnClipEndGameOver()
+	{
+		AudioManager.instance.OnClipFinishedPlaying -= OnClipEndGameOver;
+
+		AudioManager.instance.PlayJoinNextRound();
 	}
 
 	#region -----UI------
@@ -229,73 +351,4 @@ public class GameManager : MonoBehaviour
 
 	#endregion
 
-	#region -----BUTTONS-----
-	public void StartTimer()
-	{
-		//Game already going
-		if (timer.IsRunning)
-		{
-			return;
-		}
-
-		AudioManager.instance.PlayTicTac();
-
-		//New game
-		if(currentPlayers.Count <= 1)
-		{
-			currentPlayers.Clear();
-
-			//Only add human players first
-			foreach (var player in players)
-			{
-				if(player is OpponentAI) 
-				{ 
-					continue; 
-				}
-				currentPlayers.Add(player);
-			}
-
-			//If not enough humans add AIs
-			if(currentPlayers.Count < minimumPlayersToStartGame)
-			{
-				//Starting with already instantiated AIs
-				foreach (var player in players)
-				{
-					if(player is HumanPlayer)
-					{
-						continue;
-					}
-					currentPlayers.Add(player);
-					if(currentPlayers.Count >= minimumPlayersToStartGame)
-					{
-						break;
-					}
-				}
-
-				//If still not enough, instantiate more
-				while(currentPlayers.Count < minimumPlayersToStartGame)
-				{
-					OpponentAI ai = Instantiate(aiPlayerPrefab);
-					players.Add(ai);
-					currentPlayers.Add(ai);
-				}
-			}
-		}
-
-		ResetLeaderboard();
-
-		target = Random.Range(minimumTime, maximumTime);
-		foreach (var player in currentPlayers)
-		{
-			player.SetTarget(target);
-		}
-
-		targetText.text = target.ToString();
-
-		StartCoroutine(HideCurrentTimeAfterDelay(delayBeforeHideTimer));
-		StartCoroutine(EndRound(target));
-
-		timer.Restart();
-	}
-	#endregion
 }
